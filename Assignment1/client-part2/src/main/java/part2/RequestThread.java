@@ -21,6 +21,7 @@ public class RequestThread implements Runnable {
   private int startTime;  // in minutes
   private int endTime;
   private int numRequests;  // number of requests to send
+  private String serverAddress;
 
 
   int id;
@@ -34,7 +35,7 @@ public class RequestThread implements Runnable {
   public RequestThread(int startSkierId, int endSkierId,
       int startTime, int endTime, int numRequests,
       int id, int endLiftId, Map<Integer, Count> counter, CountDownLatch tenPercentCompleted,
-      CountDownLatch completed, List<PerformanceRecord> performanceRecords) {
+      CountDownLatch completed, List<PerformanceRecord> performanceRecords, String serverAddress) {
     this.startSkierId = startSkierId;
     this.endSkierId = endSkierId;
     this.startLiftId = 1;
@@ -42,7 +43,7 @@ public class RequestThread implements Runnable {
     this.startTime = startTime;
     this.endTime = endTime;
     this.numRequests = numRequests;
-
+    this.serverAddress = serverAddress;
     this.id = id;
     this.counter = counter;
     this.tenPercentCompleted = tenPercentCompleted;
@@ -65,7 +66,7 @@ public class RequestThread implements Runnable {
     SkiersApi apiInstance = new SkiersApi();
 //    ApiClient client = apiInstance.getApiClient();
     ApiClient client = new ApiClient();
-    client.setBasePath("http://54.167.231.183:8080/server_war");
+    client.setBasePath(serverAddress);
 
     apiInstance.setApiClient(client);
 

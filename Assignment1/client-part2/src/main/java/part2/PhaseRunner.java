@@ -24,6 +24,7 @@ public class PhaseRunner {
     int numSkiers = 20000;
     int numRuns = 10;  // default 10
     int numLifts = 40;
+    String serverAddress = "http://54.167.231.183:8080/server_war";
 
     int startSkierId = 1;
     List<PerformanceRecord> performanceRecords = new ArrayList<>();
@@ -78,7 +79,7 @@ public class PhaseRunner {
     Phase phase1 = new Phase(startupThreads, numSkiersPerPhase1Thread,
         numRequestsPerPhase1Thread, phase1RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
         startPhase2,
-        1, 90, performanceRecords);
+        1, 90, performanceRecords, serverAddress);
     phase1.start();
 
 
@@ -88,7 +89,7 @@ public class PhaseRunner {
     // phase 2
     Phase phase2 = new Phase(peakPhaseThreads, numSkiersPerPhase2Thread,
         numRequestsPerPhase2Thread, phase2RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
-        startPhase3, PHASE2_START_TIME, PHASE2_END_TIME, performanceRecords);
+        startPhase3, PHASE2_START_TIME, PHASE2_END_TIME, performanceRecords, serverAddress);
     phase2.start();
     startPhase3.await();
 
@@ -96,7 +97,7 @@ public class PhaseRunner {
     // phase 3
     Phase phase3 = new Phase(cooldownPhaseThreads, numSkiersPerPhase3Thread,
         numRequestsPerPhase3Thread, phase3RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
-        null, PHASE3_START_TIME, PHASE3_END_TIME, performanceRecords);
+        null, PHASE3_START_TIME, PHASE3_END_TIME, performanceRecords, serverAddress);
     phase3.start();
 
     // wait for all threads from all phases to complete

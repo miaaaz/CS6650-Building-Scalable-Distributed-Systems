@@ -17,12 +17,13 @@ public class Phase {
   private CountDownLatch tenPercentCompleted;
   private int startTime;
   private int endTime;
+  private String serverAddress;
   private List<PerformanceRecord> performanceRecords;
 
   public Phase(int phaseThreads, int numSkiersPerThread, int numRequestsPerThread,
       Map<Integer, Count> requestsCounter, int startSkierId, int numLifts,
       CountDownLatch completed, CountDownLatch tenPercentCompleted, int startTime, int endTime,
-      List<PerformanceRecord> performanceRecords
+      List<PerformanceRecord> performanceRecords, String serverAddress
   ) {
     this.phaseThreads = phaseThreads;
     this.numSkiersPerThread = numSkiersPerThread;
@@ -35,6 +36,7 @@ public class Phase {
     this.endTime = endTime;
     this.numLifts = numLifts;
     this.performanceRecords = performanceRecords;
+    this.serverAddress = serverAddress;
   }
 
   public void start() {
@@ -44,7 +46,7 @@ public class Phase {
 
       RequestThread requestThread = new RequestThread(startSkierId, endSkierId, startTime, endTime,
           numRequestsPerThread, i, numLifts, requestsCounter, tenPercentCompleted, completed,
-          performanceRecords);
+          performanceRecords, serverAddress);
       new Thread(requestThread).start();
 
       startSkierId = endSkierId + 1;
