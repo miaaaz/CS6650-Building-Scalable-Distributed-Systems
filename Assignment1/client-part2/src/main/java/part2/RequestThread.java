@@ -87,7 +87,7 @@ public class RequestThread implements Runnable {
       } else {
         this.counter.getOrDefault(id, new Count()).success++;
       }
-      System.out.println("Requests remaining: " + (numRequests - i - 1));
+//      System.out.println("Requests remaining: " + (numRequests - i - 1));
 
 //      System.out.println("Request " + i + "for phase " + phase + "thread " + threadNum + " finished");
     }

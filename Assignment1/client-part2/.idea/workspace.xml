@@ -20,14 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="431dedef-5d80-4627-bcef-542297294b67" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/part2/PerformanceRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/part2/StatsReport.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../client/src/main/java/part1/Phase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/main/java/part1/PhaseRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/part1/PhaseRunner.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/src/main/java/part1/RequestThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/src/main/java/part1/RequestThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/LiftRide.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/LiftRide.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main/java/SkierServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main/java/SkierServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client-part1/src/main/java/part1/PhaseRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client-part1/src/main/java/part1/PhaseRunner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/256_threads_performance.csv" beforeDir="false" afterPath="$PROJECT_DIR$/256_threads_performance.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/part2/PhaseRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/part2/PhaseRunner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/part2/RequestThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/part2/RequestThread.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +62,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
   </component>
   <component name="RunManager">
     <configuration name="PhaseRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -97,7 +95,7 @@
       <option name="presentableId" value="Default" />
       <updated>1633585807584</updated>
       <workItem from="1633585809187" duration="152000" />
-      <workItem from="1633648453721" duration="11172000" />
+      <workItem from="1633648453721" duration="18074000" />
     </task>
     <servers />
   </component>
@@ -125,21 +123,21 @@
       <screen x="1440" y="25" width="2560" height="1055" />
     </state>
     <state x="2237" y="296" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633648467199" />
-    <state width="1382" height="213" key="GridCell.Tab.0.bottom" timestamp="1633659302933">
+    <state width="1382" height="225" key="GridCell.Tab.0.bottom" timestamp="1633678370361">
       <screen x="1440" y="25" width="2560" height="1055" />
     </state>
-    <state width="1382" height="213" key="GridCell.Tab.0.bottom/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633659302933" />
-    <state width="1382" height="213" key="GridCell.Tab.0.center" timestamp="1633659302932">
+    <state width="1382" height="225" key="GridCell.Tab.0.bottom/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633678370361" />
+    <state width="1382" height="225" key="GridCell.Tab.0.center" timestamp="1633678370360">
       <screen x="1440" y="25" width="2560" height="1055" />
     </state>
-    <state width="1382" height="213" key="GridCell.Tab.0.center/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633659302932" />
-    <state width="1382" height="213" key="GridCell.Tab.0.left" timestamp="1633659302932">
+    <state width="1382" height="225" key="GridCell.Tab.0.center/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633678370360" />
+    <state width="1382" height="225" key="GridCell.Tab.0.left" timestamp="1633678370359">
       <screen x="1440" y="25" width="2560" height="1055" />
     </state>
-    <state width="1382" height="213" key="GridCell.Tab.0.left/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633659302932" />
-    <state width="1382" height="213" key="GridCell.Tab.0.right" timestamp="1633659302933">
+    <state width="1382" height="225" key="GridCell.Tab.0.left/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633678370359" />
+    <state width="1382" height="225" key="GridCell.Tab.0.right" timestamp="1633678370360">
       <screen x="1440" y="25" width="2560" height="1055" />
     </state>
-    <state width="1382" height="213" key="GridCell.Tab.0.right/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633659302933" />
+    <state width="1382" height="225" key="GridCell.Tab.0.right/0.25.1440.830/1440.25.2560.1055@1440.25.2560.1055" timestamp="1633678370360" />
   </component>
 </project>

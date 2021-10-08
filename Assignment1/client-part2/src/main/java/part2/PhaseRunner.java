@@ -66,6 +66,8 @@ public class PhaseRunner {
     CountDownLatch phase3Completed = new CountDownLatch(cooldownPhaseThreads);
 
     Map<Integer, Count> phase3RequestsCounter = new HashMap<>();
+    CountDownLatch allPhaseCompleted = new CountDownLatch(
+        startupThreads + peakPhaseThreads + cooldownPhaseThreads);
 
 
     // start running phases
@@ -74,7 +76,7 @@ public class PhaseRunner {
 
     // phase 1
     Phase phase1 = new Phase(startupThreads, numSkiersPerPhase1Thread,
-        numRequestsPerPhase1Thread, phase1RequestsCounter, startSkierId, numLifts, phase1Completed,
+        numRequestsPerPhase1Thread, phase1RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
         startPhase2,
         1, 90, performanceRecords);
     phase1.start();
@@ -85,7 +87,7 @@ public class PhaseRunner {
 
     // phase 2
     Phase phase2 = new Phase(peakPhaseThreads, numSkiersPerPhase2Thread,
-        numRequestsPerPhase2Thread, phase2RequestsCounter, startSkierId, numLifts, phase2Completed,
+        numRequestsPerPhase2Thread, phase2RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
         startPhase3, PHASE2_START_TIME, PHASE2_END_TIME, performanceRecords);
     phase2.start();
     startPhase3.await();
@@ -93,14 +95,14 @@ public class PhaseRunner {
 
     // phase 3
     Phase phase3 = new Phase(cooldownPhaseThreads, numSkiersPerPhase3Thread,
-        numRequestsPerPhase3Thread, phase3RequestsCounter, startSkierId, numLifts, phase3Completed,
+        numRequestsPerPhase3Thread, phase3RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
         null, PHASE3_START_TIME, PHASE3_END_TIME, performanceRecords);
     phase3.start();
 
     // wait for all threads from all phases to complete
-    phase1Completed.await();
-    phase2Completed.await();
-    phase3Completed.await();
+//    phase1Completed.await();
+//    phase2Completed.await();
+    allPhaseCompleted.await();
 
     // record the end time
     long end = System.currentTimeMillis();
