@@ -1,3 +1,4 @@
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -11,11 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "SkierServlet")
 public class SkierServlet extends HttpServlet {
 
+  private Gson gson = new Gson();
+
   protected void doPost(HttpServletRequest request,
       HttpServletResponse response)
       throws ServletException, IOException {
 
-    response.setContentType("text/plain");
+
     String urlPath = request.getPathInfo();
 
 
@@ -36,15 +39,13 @@ public class SkierServlet extends HttpServlet {
     } else {
       response.setStatus(HttpServletResponse.SC_OK);
 
-      // process url params in `urlParts`
-      String resortId = urlParts[1];
-      String seasonId = urlParts[3];
-      String dayId = urlParts[5];
-      String skierId = urlParts[7];
-      // return dummy data as response body for assignment 1
-      String message = "Resort: " + resortId + "\nSeason: " + seasonId
-          + "\nDay: " + dayId + "\nSkier: " + skierId;
-      response.getWriter().write(message);
+      // uses dummy data as response body
+      LiftRide liftRide = new LiftRide(217, 21);
+      String liftRideJsonString = this.gson.toJson(liftRide);
+
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+      response.getWriter().write(liftRideJsonString);
     }
 
   }
@@ -98,7 +99,7 @@ public class SkierServlet extends HttpServlet {
     } else if (urlParts.length != 8 && urlParts.length != 3) {
       return false;
     }
-    System.out.println("Validating urls");
+
     return isValid(Arrays.copyOfRange(urlParts, 1, urlParts.length)) || isValidVerticalCall(Arrays.copyOfRange(urlParts, 1, urlParts.length));
   }
 
