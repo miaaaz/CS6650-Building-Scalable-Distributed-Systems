@@ -5,6 +5,7 @@ import io.swagger.client.api.SkiersApi;
 import io.swagger.client.model.*;
 import io.swagger.client.ApiClient;
 import io.swagger.client.ApiResponse;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,29 +21,30 @@ public class RequestThread implements Runnable {
   private int endTime;
   private int numRequests;  // number of requests to send
 
-  private int successfulRequests;
-  private int failedRequests;
 
   int id;
   Map<Integer, Count> counter;
 
-//  private CountDownLatch exhausted;
   private CountDownLatch tenPercentCompleted;
+  private CountDownLatch completed;
 
-  public RequestThread(int id, Map<Integer, Count> counter, int startSkierId, int endSkierId, int startTime, int endTime,
-      int numRequests,
-      CountDownLatch tenPercentCompleted) {
+  public RequestThread(int startSkierId, int endSkierId,
+      int startTime, int endTime, int numRequests,
+      int id, int endLiftId,
+      Map<Integer, Count> counter, CountDownLatch tenPercentCompleted,
+      CountDownLatch completed) {
     this.startSkierId = startSkierId;
     this.endSkierId = endSkierId;
+    this.startLiftId = 1;
+    this.endLiftId = endLiftId;
     this.startTime = startTime;
     this.endTime = endTime;
     this.numRequests = numRequests;
-//    this.exhausted = exhausted;
-    this.tenPercentCompleted = tenPercentCompleted;
-    this.successfulRequests = 0;
-    this.failedRequests = 0;
+
     this.id = id;
     this.counter = counter;
+    this.tenPercentCompleted = tenPercentCompleted;
+    this.completed = completed;
   }
 
   /**
@@ -58,15 +60,16 @@ public class RequestThread implements Runnable {
   @Override
   public void run() {
     SkiersApi apiInstance = new SkiersApi();
-    ApiClient client = apiInstance.getApiClient();
-
-    // TODO:
+//    ApiClient client = apiInstance.getApiClient();
+    ApiClient client = new ApiClient();
     client.setBasePath("http://54.167.231.183:8080/server_war");
-    System.out.println("start phase 1");
+
+    apiInstance.setApiClient(client);
+
 
     for (int i = 0; i < this.numRequests; i++) {
 
-      System.out.println("Request " + i + " starts");
+//      System.out.println("Request " + i + "for phase " + phase + "thread " + threadNum + " starts");
 
       int failedTimes = 0;
 
@@ -83,12 +86,17 @@ public class RequestThread implements Runnable {
       } else {
         this.counter.getOrDefault(id, new Count()).success++;
       }
+      System.out.println("Requests remaining: " + (numRequests - i - 1));
 
-      System.out.println("Request " + i + " finished");
+//      System.out.println("Request " + i + "for phase " + phase + "thread " + threadNum + " finished");
     }
 
-    tenPercentCompleted.countDown();
-    System.out.println("count: " + tenPercentCompleted.getCount());
+    // consume requests
+    if (tenPercentCompleted != null) {
+      tenPercentCompleted.countDown();
+    }
+    completed.countDown();
+    System.out.println("Threads remaining: " + completed.getCount());
 
 
   }
@@ -110,7 +118,7 @@ public class RequestThread implements Runnable {
 
     // randomly select skierID, liftID and a time value
     Integer skierID = getRandomNumFromRange(startSkierId, endSkierId);
-    System.out.println("skierID: " + skierID);
+//    System.out.println("skierID: " + skierID);
     body.setLiftID(getRandomNumFromRange(startLiftId, endLiftId));
     body.setTime(getRandomNumFromRange(startTime, endTime));
 
@@ -138,11 +146,5 @@ public class RequestThread implements Runnable {
 
   }
 
-  public int getSuccessfulRequests() {
-    return successfulRequests;
-  }
 
-  public int getFailedRequests() {
-    return failedRequests;
-  }
 }

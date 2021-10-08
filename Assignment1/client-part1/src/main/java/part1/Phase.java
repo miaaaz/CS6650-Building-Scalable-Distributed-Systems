@@ -10,6 +10,7 @@ public class Phase {
   private int numSkiersPerThread;
   private int numRequestsPerThread;
   Map<Integer, Count> requestsCounter;
+  private int numLifts;
   private int startSkierId;
   private CountDownLatch completed;
   private CountDownLatch tenPercentCompleted;
@@ -17,8 +18,9 @@ public class Phase {
   private int endTime;
 
   public Phase(int phaseThreads, int numSkiersPerThread, int numRequestsPerThread,
-      Map<Integer, Count> requestsCounter, int startSkierId,
-      CountDownLatch completed, CountDownLatch tenPercentCompleted, int startTime, int endTime) {
+      Map<Integer, Count> requestsCounter, int startSkierId, int numLifts,
+      CountDownLatch completed, CountDownLatch tenPercentCompleted, int startTime, int endTime
+      ) {
     this.phaseThreads = phaseThreads;
     this.numSkiersPerThread = numSkiersPerThread;
     this.numRequestsPerThread = numRequestsPerThread;
@@ -28,6 +30,7 @@ public class Phase {
     this.tenPercentCompleted = tenPercentCompleted;
     this.startTime = startTime;
     this.endTime = endTime;
+    this.numLifts = numLifts;
   }
 
   public void start() {
@@ -35,7 +38,8 @@ public class Phase {
       requestsCounter.put(i, new Count());
       int endSkierId = startSkierId + numSkiersPerThread - 1;
 
-      RequestThread requestThread = new RequestThread(startSkierId, endSkierId, startTime, endTime, numRequestsPerThread, i, requestsCounter, tenPercentCompleted, completed);
+      RequestThread requestThread = new RequestThread(startSkierId, endSkierId, startTime, endTime,
+          numRequestsPerThread, i, numLifts, requestsCounter, tenPercentCompleted, completed);
       new Thread(requestThread).start();
 
       startSkierId = endSkierId + 1;
@@ -44,7 +48,7 @@ public class Phase {
 
   public int getSuccessfulRequestsCount() {
     int total = 0;
-    for (Count counts: requestsCounter.values()) {
+    for (Count counts : requestsCounter.values()) {
       total += counts.success;
     }
     return total;
@@ -52,7 +56,7 @@ public class Phase {
 
   public int getFailedRequestsCount() {
     int total = 0;
-    for (Count counts: requestsCounter.values()) {
+    for (Count counts : requestsCounter.values()) {
       total += counts.failure;
     }
     return total;
