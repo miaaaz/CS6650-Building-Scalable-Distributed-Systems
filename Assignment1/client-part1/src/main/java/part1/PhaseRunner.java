@@ -21,6 +21,7 @@ public class PhaseRunner {
     int numSkiers = 20000;
     int numRuns = 10;  // default 10
     int numLifts = 40;
+    String serverAddress = "http://54.167.231.183:8080/server_war";
 
     int startSkierId = 1;
 
