@@ -19,6 +19,7 @@ public class PhaseRunner {
 
   public static void main(String[] args) throws InterruptedException, IOException {
     final double TEN_PERCENTAGE = 0.1;
+    final int MS_PER_SECOND = 1000;
 
     // should be command line params, hardcode for convenience in this assignment
     int numThreads = 64;
@@ -115,7 +116,7 @@ public class PhaseRunner {
     // record the end time
     long end = System.currentTimeMillis();
 
-    long wallTime = (end - start) / 1000;
+    long wallTime = (end - start) / MS_PER_SECOND;  // in seconds
 
     // write to csv file
     List<String[]> data = processPerformanceRecords(performanceRecords);
