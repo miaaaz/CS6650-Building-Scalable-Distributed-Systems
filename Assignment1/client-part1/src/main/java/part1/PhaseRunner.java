@@ -15,6 +15,7 @@ public class PhaseRunner {
   }
 
   public static void main(String[] args) throws InterruptedException {
+    final double TEN_PERCENTAGE = 0.1;
 
     // should be command line params, hardcode for convenience in this assignment
     int numThreads = 64;
@@ -30,41 +31,43 @@ public class PhaseRunner {
     // =================================== //
 
     // parameters of phase 1
+    final int PHASE1_START_TIME = 1;
+    final int PHASE1_END_TIME = 90;
+    final double PHASE1_REQUESTS_FACTOR = 0.2;
+
     int startupThreads = numThreads / 4;
 
     // Move to phase 2 once 10% (rounded up) of the threads have completed
-    int tenPercentPhase1Threads = (int) Math.ceil((startupThreads * 0.1));
+    int tenPercentPhase1Threads = (int) Math.ceil((startupThreads * TEN_PERCENTAGE));
     CountDownLatch startPhase2 = new CountDownLatch(tenPercentPhase1Threads);
-    CountDownLatch phase1Completed = new CountDownLatch(startupThreads);
 
     Map<Integer, Count> phase1RequestsCounter = new HashMap<>();
 
     int numSkiersPerPhase1Thread = numSkiers / startupThreads;
-    int numRequestsPerPhase1Thread = (int) (numRuns * 0.2 * numSkiersPerPhase1Thread);
+    int numRequestsPerPhase1Thread = (int) (numRuns * PHASE1_REQUESTS_FACTOR * numSkiersPerPhase1Thread);
 
     // parameters of phase 2
     final int PHASE2_START_TIME = 91;
     final int PHASE2_END_TIME = 360;
+    final double PHASE2_REQUESTS_FACTOR = 0.6;
 
     int peakPhaseThreads = numThreads;
     int numSkiersPerPhase2Thread = numSkiers / numThreads;
-    int numRequestsPerPhase2Thread = (int) (numRuns * 0.6 * numSkiersPerPhase2Thread);
-    int tenPercentPhase2Threads = (int) (peakPhaseThreads * 0.1);
+    int numRequestsPerPhase2Thread = (int) (numRuns * PHASE2_REQUESTS_FACTOR * numSkiersPerPhase2Thread);
+    int tenPercentPhase2Threads = (int) (peakPhaseThreads * TEN_PERCENTAGE);
 
     CountDownLatch startPhase3 = new CountDownLatch(tenPercentPhase2Threads);
-    CountDownLatch phase2Completed = new CountDownLatch(peakPhaseThreads);
     Map<Integer, Count> phase2RequestsCounter = new HashMap<>();
 
     // parameters of phase 3
     final int PHASE3_START_TIME = 361;
     final int PHASE3_END_TIME = 420;
+    final double PHASE3_REQUESTS_FACTOR = 0.1;
 
-    // identical to phase 1
-    int cooldownPhaseThreads = startupThreads;
-    int numSkiersPerPhase3Thread = numSkiersPerPhase1Thread;
+    int cooldownPhaseThreads = startupThreads;  // identical to phase 1
+    int numSkiersPerPhase3Thread = numSkiersPerPhase1Thread;  // identical to phase
 
-    int numRequestsPerPhase3Thread = (int) (numRuns * 0.1);
-    CountDownLatch phase3Completed = new CountDownLatch(cooldownPhaseThreads);
+    int numRequestsPerPhase3Thread = (int) (numRuns * PHASE3_REQUESTS_FACTOR);
 
     CountDownLatch allPhaseCompleted = new CountDownLatch(
         startupThreads + peakPhaseThreads + cooldownPhaseThreads);
@@ -80,10 +83,8 @@ public class PhaseRunner {
     Phase phase1 = new Phase(startupThreads, numSkiersPerPhase1Thread,
         numRequestsPerPhase1Thread, phase1RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
         startPhase2,
-        1, 90);
+        PHASE1_START_TIME, PHASE1_END_TIME);
     phase1.start();
-
-    System.out.println("total threads: " + phase1Completed.getCount());
 
     startPhase2.await();
 
@@ -92,6 +93,7 @@ public class PhaseRunner {
         numRequestsPerPhase2Thread, phase2RequestsCounter, startSkierId, numLifts, allPhaseCompleted,
         startPhase3, PHASE2_START_TIME, PHASE2_END_TIME);
     phase2.start();
+
     startPhase3.await();
 
     // phase 3
@@ -101,10 +103,7 @@ public class PhaseRunner {
     phase3.start();
 
     // wait for all threads from all phases to complete
-
     allPhaseCompleted.await();
-//    phase2Completed.await();
-//    phase3Completed.await();
 
     // record the end time
     long end = System.currentTimeMillis();
