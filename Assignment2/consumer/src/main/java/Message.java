@@ -1,6 +1,3 @@
-package com.consumer;
-
-import com.consumer.LiftRide;
 
 public class Message {
 

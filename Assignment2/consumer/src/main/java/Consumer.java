@@ -1,6 +1,3 @@
-package com.consumer;
-
-
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;

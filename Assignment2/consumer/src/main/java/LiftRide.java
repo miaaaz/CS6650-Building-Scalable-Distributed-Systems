@@ -1,5 +1,3 @@
-package com.consumer;
-
 public class LiftRide {
 
   private Integer time;
