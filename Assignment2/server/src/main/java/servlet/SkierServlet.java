@@ -1,13 +1,16 @@
+package servlet;
+
+import model.LiftRide;
+import model.Message;
+import util.AnnotatedDeserializer;
+import util.ChannelPoolFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.TimeoutException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,15 +18,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
-@WebServlet(name = "SkierServlet")
+@WebServlet(name = "SkierServlet", urlPatterns = "/skiers/*")
 public class SkierServlet extends HttpServlet {
 
   private final static String QUEUE_NAME = "postSkiers";
+
+  private final static String HOST = "ec2-34-210-182-60.us-west-2.compute.amazonaws.com";
+  private final static int PORT = 5672;
+  private final static String RABBITMQ_USERNAME = "admin";
+  private final static String RABBITMQ_PASSWORD = "admin";
+
   private GenericObjectPool<Channel> channelPool;
 
   public void init() {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost("localhost");
+    factory.setHost(HOST);
+    factory.setPort(PORT);
+
+    factory.setUsername(RABBITMQ_USERNAME);
+    factory.setPassword(RABBITMQ_PASSWORD);
     ChannelPoolFactory poolFactory = new ChannelPoolFactory(factory);
     channelPool = new GenericObjectPool<>(poolFactory);
   }
@@ -34,6 +47,7 @@ public class SkierServlet extends HttpServlet {
       throws ServletException, IOException {
 
     String urlPath = request.getPathInfo();
+    System.out.println("Getting a request: " + urlPath);
 
     // check we have a URL!
     if (urlPath == null || urlPath.isEmpty()) {
@@ -50,21 +64,22 @@ public class SkierServlet extends HttpServlet {
     if (!isUrlValid(urlParts)) {
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       response.getWriter().write("Invalid inputs supplied");
+      System.out.println("Invalid inputs supplied");
     } else if (!isPayloadValid(payload)) {
+      System.out.println(payload);
       response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
       response.getWriter().write("Invalid request body. \"time\" and \"liftId\" required.");
+      System.out.println("Invalid request body");
     }
 
     else {
       response.setStatus(HttpServletResponse.SC_OK);
 
-      Gson gson = new GsonBuilder()
-          .registerTypeAdapter(LiftRide.class, new AnnotatedDeserializer<LiftRide>())
-          .create();
-      LiftRide liftRide = gson.fromJson(payload, LiftRide.class);
-      String message = gson.toJson(liftRide);
+      // Generate message
+      String message = generateMessage(urlParts, payload);
 
 
+      // Send message to queue
       try {
         Channel channel = channelPool.borrowObject();
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
@@ -76,9 +91,9 @@ public class SkierServlet extends HttpServlet {
         System.out.println("Failed to send message to queue");
       }
 
-//      response.setContentType("application/json");
-//      response.setCharacterEncoding("UTF-8");
-//      response.getWriter().write("lift: " + liftRide.getLiftId());
+      response.setContentType("application/json");
+      response.setCharacterEncoding("UTF-8");
+      response.getWriter().write("Successfully POST");
     }
 
   }
@@ -148,6 +163,22 @@ public class SkierServlet extends HttpServlet {
     } catch (Exception e) {
       return false;
     }
+
+  }
+
+  private String generateMessage(String[] urlParts, String payload) {
+    int resortId = Integer.parseInt(urlParts[1]);
+    String seasonId = urlParts[3];
+    String dayId = urlParts[5];
+    int skierId = Integer.parseInt(urlParts[7]);
+
+    Gson gson = new GsonBuilder()
+        .registerTypeAdapter(LiftRide.class, new AnnotatedDeserializer<LiftRide>())
+        .create();
+    LiftRide liftRide = gson.fromJson(payload, LiftRide.class);
+
+    Message message = new Message(skierId, dayId, seasonId, resortId, liftRide);
+    return new Gson().toJson(message);
 
   }
 

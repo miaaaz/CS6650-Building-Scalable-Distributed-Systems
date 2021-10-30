@@ -1,3 +1,5 @@
+package util;
+
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConnectionFactory;
 import org.apache.commons.pool2.PooledObject;
