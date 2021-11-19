@@ -44,11 +44,9 @@ public class Consumer {
   // configure rabbitmq server
   private final static String HOST = "ec2-54-185-196-16.us-west-2.compute.amazonaws.com";
   private final static int PORT = 5672;
-  private final static String RABBITMQ_USERNAME = "admin";
-  private final static String RABBITMQ_PASSWORD = "admin";
 
-//  private final static String RABBITMQ_USERNAME = System.getenv("RABBITMQ_USERNAME");
-//  private final static String RABBITMQ_PASSWORD = System.getenv("RABBITMQ_PASSWORD");
+  private final static String RABBITMQ_USERNAME = System.getenv("RABBITMQ_USERNAME");
+  private final static String RABBITMQ_PASSWORD = System.getenv("RABBITMQ_PASSWORD");
 
 
   public static void main(String[] args) throws IOException, TimeoutException {
