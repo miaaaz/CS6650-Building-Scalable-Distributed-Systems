@@ -2,13 +2,13 @@ package model;
 
 import util.JsonRequired;
 
-public class LiftRide {
+public class LiftPayload {
 
   @JsonRequired
   private Integer time;
   @JsonRequired private Integer liftID;
 
-  public LiftRide(int time, int liftId) {
+  public LiftPayload(int time, int liftId) {
     this.time = time;
     this.liftID = liftId;
   }
