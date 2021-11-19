@@ -1,0 +1,5 @@
+dao/SkierDAO.class
+Consumer.class
+model/LiftRide.class
+model/LiftDetail.class
+dao/DataSource.class
