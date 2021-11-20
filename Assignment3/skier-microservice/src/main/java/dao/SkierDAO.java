@@ -9,16 +9,18 @@ import model.LiftRide;
 
 public class SkierDAO {
 
-  private final DataSource dataSource;
-  private final RedisAsyncCommands<String, String> commands;
+  private DataSource dataSource;
+  private RedisAsyncCommands<String, String> commands;
 
   public SkierDAO() {
     dataSource = new DataSource();
-    commands = dataSource.getRedisCommand();
+
   }
 
   public void put(String message) {
 
+    dataSource = new DataSource();
+    commands = dataSource.getRedisCommand();
     Gson gson = new Gson();
     LiftDetail liftDetail = gson.fromJson(message, LiftDetail.class);
     String detailJson = gson.toJson(liftDetail);
@@ -26,7 +28,7 @@ public class SkierDAO {
     String skierID = String.valueOf(messageObject.getSkierID());
     String liftID = String.valueOf(messageObject.getLiftID());
     commands.hset(skierID, liftID, detailJson);
-    System.out.println("Added " + message);
+    System.out.println("Put " + message);
 
 
   }

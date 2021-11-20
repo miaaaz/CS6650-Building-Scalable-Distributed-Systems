@@ -11,7 +11,7 @@ import io.lettuce.core.resource.DirContextDnsResolver;
 
 public class DataSource {
 
-  private static final String HOST = "redis://redis.sjlr22.ng.0001.usw2.cache.amazonaws.com:6379/1";
+  private static final String HOST = "redis://resort-db.sjlr22.ng.0001.usw2.cache.amazonaws.com:6379/0";
   private final StatefulRedisConnection<String, String> redisConnection;
   private final RedisClient redisClient;
 
@@ -20,7 +20,6 @@ public class DataSource {
         .dnsResolver(new DirContextDnsResolver()) // Does not cache DNS lookups
         .build();
 
-    // 0 is the database number
     redisClient = RedisClient.create(clientResources, HOST);
     redisConnection = redisClient.connect();
   }

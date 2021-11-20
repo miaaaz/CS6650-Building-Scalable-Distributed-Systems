@@ -60,16 +60,11 @@ public class Consumer {
     final Connection connection = factory.newConnection();
 
 
-
-    // redis
     SkierDAO skierDAO = new SkierDAO();
 
     Runnable runnable = () -> {
       try {
         final Channel channel = connection.createChannel();
-//        channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
-//        String queueName = channel.queueDeclare().getQueue();
-//        channel.queueBind(queueName, EXCHANGE_NAME, "");
         channel.queueDeclare(QUEUE_NAME, true, false, false, null);
         channel.basicQos(5);
         System.out.println(" [*] Thread waiting for messages. To exit press CTRL+C");
@@ -77,57 +72,9 @@ public class Consumer {
         DeliverCallback deliverCallback = (consumerTag, delivery) -> {
           String message = new String(delivery.getBody(), "UTF-8");
           channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-//          System.out.println(
-//              "Callback thread ID = " + Thread.currentThread().getId() + " Received '" + message
-//                  + "'");
 
           // process messages
           skierDAO.put(message);
-
-
-//          Gson gson = new Gson();
-//          LiftDetail liftDetail = gson.fromJson(message, LiftDetail.class);
-//          String detailJson = gson.toJson(liftDetail);
-//          LiftRide messageObject = gson.fromJson(message, LiftRide.class);
-//          String skierID = String.valueOf(messageObject.getSkierID());
-//          String liftID = String.valueOf(messageObject.getLiftID());
-//          jedis.hset(skierID, liftID, message);
-//          redisClient.setDefaultTimeout(5, TimeUnit.SECONDS);
-//          RedisClient redisClient = RedisClient.create(clientResources, "redis://redis.sjlr22.ng.0001.usw2.cache.amazonaws.com:6379/0");
-//
-//          StatefulRedisConnection<String, String> redisConnection = redisClient.connect();
-//          RedisAsyncCommands<String, String> commands = redisConnection.async();
-
-//          commands.set(skierID, detailJson);
-
-//          commands.hset(skierID, liftID, detailJson);
-//
-//          System.out.println(skierID);
-//          System.out.println(liftID);
-//          redisConnection.close();
-//          redisClient.shutdown();
-//          try (Jedis jedis = pool.getResource()) {
-//            /// ... do stuff here ... for example
-//            jedis.set(skierID, "12");
-//            String foobar = jedis.get(skierID);
-//            System.out.println(foobar);
-//          }
-//
-//          pool.close();
-
-//          int skierID = messageObject.getSkierID();
-//          RSetMultimap<Integer, LiftRide> skierDB = redisson.getSetMultimap("skier");
-////          RMap<String, String> map = redisson.getMap("anyMap");
-//          System.out.println(skierDB);
-////          System.out.println(gson.toJson(messageObject));
-//          System.out.println("123");
-
-
-//          skierDB.put(skierID, messageObject);
-//
-//          System.out.println("Added: " + message);
-//          SkierDAO skierDAO = new SkierDAO();
-//          skierDAO.put(messageObject);
 
 
         };
@@ -145,13 +92,6 @@ public class Consumer {
     for (int i = 0; i < NUM_THREADS; i++) {
       new Thread(runnable).start();
     }
-
-    // Clean up
-    skierDAO.close();
-//    redisConnection.close();
-//    redisClient.shutdown();
-
-//    redisson.shutdown();
 
 
 
